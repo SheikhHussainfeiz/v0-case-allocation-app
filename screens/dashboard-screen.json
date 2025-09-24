@@ -1,0 +1,199 @@
+{
+  "screenName": "DashboardScreen",
+  "layout": "Vertical",
+  "components": {
+    "header": {
+      "type": "Container",
+      "orientation": "Horizontal",
+      "components": {
+        "title": {
+          "type": "Label",
+          "text": "Case Allocation Dashboard",
+          "fontSize": 24,
+          "fontWeight": "Semibold",
+          "color": "varTextPrimary"
+        },
+        "userProfile": {
+          "type": "Label",
+          "text": "User().FullName",
+          "fontSize": 14,
+          "color": "varTextSecondary"
+        }
+      }
+    },
+    "kpiCards": {
+      "type": "Container",
+      "orientation": "Horizontal",
+      "components": {
+        "totalCases": {
+          "type": "Rectangle",
+          "fill": "varCardBackground",
+          "borderRadius": 8,
+          "width": "(Parent.Width - 60) / 4",
+          "height": 120,
+          "components": {
+            "icon": {
+              "type": "Icon",
+              "icon": "Cases",
+              "color": "varPrimaryColor",
+              "size": 24
+            },
+            "value": {
+              "type": "Label",
+              "text": "CountRows(Cases)",
+              "fontSize": 32,
+              "fontWeight": "Semibold",
+              "color": "varTextPrimary"
+            },
+            "label": {
+              "type": "Label",
+              "text": "Total Cases",
+              "fontSize": 14,
+              "color": "varTextSecondary"
+            }
+          }
+        },
+        "openCases": {
+          "type": "Rectangle",
+          "fill": "varCardBackground",
+          "borderRadius": 8,
+          "width": "(Parent.Width - 60) / 4",
+          "height": 120,
+          "components": {
+            "icon": {
+              "type": "Icon",
+              "icon": "FolderOpen",
+              "color": "varPrimaryColor",
+              "size": 24
+            },
+            "value": {
+              "type": "Label",
+              "text": "CountRows(Filter(Cases, Status in [\"New\", \"In Progress\", \"Pending\"]))",
+              "fontSize": 32,
+              "fontWeight": "Semibold",
+              "color": "varTextPrimary"
+            },
+            "label": {
+              "type": "Label",
+              "text": "Open Cases",
+              "fontSize": 14,
+              "color": "varTextSecondary"
+            }
+          }
+        },
+        "overdueCases": {
+          "type": "Rectangle",
+          "fill": "varCardBackground",
+          "borderRadius": 8,
+          "width": "(Parent.Width - 60) / 4",
+          "height": 120,
+          "components": {
+            "icon": {
+              "type": "Icon",
+              "icon": "Alert",
+              "color": "varErrorColor",
+              "size": 24
+            },
+            "value": {
+              "type": "Label",
+              "text": "CountRows(Filter(Cases, DueDate < Today() && Status <> \"Closed\"))",
+              "fontSize": 32,
+              "fontWeight": "Semibold",
+              "color": "varTextPrimary"
+            },
+            "label": {
+              "type": "Label",
+              "text": "Overdue Cases",
+              "fontSize": 14,
+              "color": "varTextSecondary"
+            }
+          }
+        },
+        "avgResolution": {
+          "type": "Rectangle",
+          "fill": "varCardBackground",
+          "borderRadius": 8,
+          "width": "(Parent.Width - 60) / 4",
+          "height": 120,
+          "components": {
+            "icon": {
+              "type": "Icon",
+              "icon": "CheckBadge",
+              "color": "varSuccessColor",
+              "size": 24
+            },
+            "value": {
+              "type": "Label",
+              "text": "Round(Average(Filter(Cases, Status = \"Closed\"), DateDiff(CreatedDate, ClosedDate, Days)), 1) & \" days\"",
+              "fontSize": 32,
+              "fontWeight": "Semibold",
+              "color": "varTextPrimary"
+            },
+            "label": {
+              "type": "Label",
+              "text": "Avg Resolution",
+              "fontSize": 14,
+              "color": "varTextSecondary"
+            }
+          }
+        }
+      }
+    },
+    "charts": {
+      "type": "Container",
+      "orientation": "Horizontal",
+      "components": {
+        "statusChart": {
+          "type": "ColumnChart",
+          "items": "AddColumns(GroupBy(Cases, \"Status\", \"Count\"), \"Value\", CountRows(Count))",
+          "xAxisName": "Status",
+          "yAxisName": "Count",
+          "seriesAxisName": "Value",
+          "width": "Parent.Width / 2 - 20"
+        },
+        "priorityChart": {
+          "type": "PieChart",
+          "items": "AddColumns(GroupBy(Cases, \"Priority\", \"Count\"), \"Value\", CountRows(Count))",
+          "categoryAxisName": "Priority",
+          "valueAxisName": "Value",
+          "width": "Parent.Width / 2 - 20"
+        }
+      }
+    },
+    "recentActivity": {
+      "type": "Gallery",
+      "items": "Sort(CaseNotes, CreatedDate, Descending)",
+      "layout": "Vertical",
+      "templateSize": 60,
+      "template": {
+        "background": {
+          "type": "Rectangle",
+          "fill": "varCardBackground",
+          "borderRadius": 4
+        },
+        "avatar": {
+          "type": "Circle",
+          "fill": "varPrimaryColor",
+          "label": "Upper(Left(LookUp(Users, UserID = ThisItem.UserID, Name), 1))"
+        },
+        "userName": {
+          "type": "Label",
+          "text": "LookUp(Users, UserID = ThisItem.UserID, Name)",
+          "fontWeight": "Semibold",
+          "color": "varTextPrimary"
+        },
+        "action": {
+          "type": "Label",
+          "text": "\"Added note to case \" & ThisItem.CaseID",
+          "color": "varTextSecondary"
+        },
+        "timestamp": {
+          "type": "Label",
+          "text": "Text(CreatedDate, \"mm/dd hh:mm\")",
+          "fontSize": 12,
+          "color": "varTextSecondary"
+        }
+      }
+    }
+  }
+}

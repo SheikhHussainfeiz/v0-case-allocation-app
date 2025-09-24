@@ -1,0 +1,182 @@
+{
+  "screenName": "UsersScreen",
+  "layout": "Vertical",
+  "components": {
+    "header": {
+      "type": "Container",
+      "orientation": "Horizontal",
+      "components": {
+        "title": {
+          "type": "Label",
+          "text": "User Management",
+          "fontSize": 24,
+          "fontWeight": "Semibold",
+          "color": "varTextPrimary"
+        }
+      }
+    },
+    "teamStats": {
+      "type": "Container",
+      "orientation": "Horizontal",
+      "components": {
+        "totalUsers": {
+          "type": "Rectangle",
+          "fill": "varCardBackground",
+          "borderRadius": 8,
+          "width": "(Parent.Width - 40) / 3",
+          "height": 80,
+          "components": {
+            "value": {
+              "type": "Label",
+              "text": "CountRows(Users)",
+              "fontSize": 24,
+              "fontWeight": "Semibold",
+              "color": "varTextPrimary"
+            },
+            "label": {
+              "type": "Label",
+              "text": "Total Users",
+              "fontSize": 14,
+              "color": "varTextSecondary"
+            }
+          }
+        },
+        "activeUsers": {
+          "type": "Rectangle",
+          "fill": "varCardBackground",
+          "borderRadius": 8,
+          "width": "(Parent.Width - 40) / 3",
+          "height": 80,
+          "components": {
+            "value": {
+              "type": "Label",
+              "text": "CountRows(Filter(Users, IsActive = true))",
+              "fontSize": 24,
+              "fontWeight": "Semibold",
+              "color": "varSuccessColor"
+            },
+            "label": {
+              "type": "Label",
+              "text": "Active Users",
+              "fontSize": 14,
+              "color": "varTextSecondary"
+            }
+          }
+        },
+        "avgWorkload": {
+          "type": "Rectangle",
+          "fill": "varCardBackground",
+          "borderRadius": 8,
+          "width": "(Parent.Width - 40) / 3",
+          "height": 80,
+          "components": {
+            "value": {
+              "type": "Label",
+              "text": "Round(Average(Users, CountRows(Filter(Cases, AssignedTo = UserID && Status in [\"New\", \"In Progress\"]))), 1)",
+              "fontSize": 24,
+              "fontWeight": "Semibold",
+              "color": "varPrimaryColor"
+            },
+            "label": {
+              "type": "Label",
+              "text": "Avg Workload",
+              "fontSize": 14,
+              "color": "varTextSecondary"
+            }
+          }
+        }
+      }
+    },
+    "usersGallery": {
+      "type": "Gallery",
+      "items": "Sort(Users, Name, Ascending)",
+      "layout": "Vertical",
+      "templateSize": 140,
+      "template": {
+        "background": {
+          "type": "Rectangle",
+          "fill": "varCardBackground",
+          "borderRadius": 8
+        },
+        "avatar": {
+          "type": "Circle",
+          "fill": "varPrimaryColor",
+          "width": 60,
+          "height": 60,
+          "x": 20,
+          "y": 20,
+          "components": {
+            "initials": {
+              "type": "Label",
+              "text": "Upper(Left(ThisItem.Name, 1) & If(Find(\" \", ThisItem.Name) > 0, Mid(ThisItem.Name, Find(\" \", ThisItem.Name) + 1, 1), \"\"))",
+              "color": "White",
+              "fontSize": 18,
+              "fontWeight": "Semibold",
+              "align": "Center"
+            }
+          }
+        },
+        "name": {
+          "type": "Label",
+          "text": "ThisItem.Name",
+          "fontWeight": "Semibold",
+          "color": "varTextPrimary",
+          "x": 100,
+          "y": 20
+        },
+        "role": {
+          "type": "Label",
+          "text": "ThisItem.Role & If(ThisItem.IsTeamLead, \" (Team Lead)\", \"\")",
+          "color": "varTextSecondary",
+          "x": 100,
+          "y": 45
+        },
+        "email": {
+          "type": "Label",
+          "text": "ThisItem.Email",
+          "color": "varTextSecondary",
+          "fontSize": 12,
+          "x": 100,
+          "y": 65
+        },
+        "workloadSection": {
+          "type": "Container",
+          "x": 100,
+          "y": 85,
+          "components": {
+            "workloadLabel": {
+              "type": "Label",
+              "text": "\"Workload: \" & CountRows(Filter(Cases, AssignedTo = ThisItem.UserID && Status in [\"New\", \"In Progress\"])) & \"/\" & ThisItem.MaxDailyLoad",
+              "color": "varTextSecondary",
+              "fontSize": 12
+            },
+            "progressBar": {
+              "type": "Rectangle",
+              "fill": "RGBA(75, 85, 99, 1)",
+              "width": 200,
+              "height": 8,
+              "borderRadius": 4,
+              "y": 20,
+              "components": {
+                "progress": {
+                  "type": "Rectangle",
+                  "fill": "If((CountRows(Filter(Cases, AssignedTo = ThisItem.UserID && Status in [\"New\", \"In Progress\"])) / ThisItem.MaxDailyLoad) > 0.8, varErrorColor, If((CountRows(Filter(Cases, AssignedTo = ThisItem.UserID && Status in [\"New\", \"In Progress\"])) / ThisItem.MaxDailyLoad) > 0.6, varWarningColor, varSuccessColor))",
+                  "width": "Min(200, (CountRows(Filter(Cases, AssignedTo = ThisItem.UserID && Status in [\"New\", \"In Progress\"])) / ThisItem.MaxDailyLoad) * 200)",
+                  "height": 8,
+                  "borderRadius": 4
+                }
+              }
+            }
+          }
+        },
+        "activeToggle": {
+          "type": "Toggle",
+          "default": "ThisItem.IsActive",
+          "x": "Parent.Width - 80",
+          "y": 30,
+          "onChange": "Patch(Users, ThisItem, {IsActive: Self.Value})"
+        }
+      }
+    }
+  }
+}

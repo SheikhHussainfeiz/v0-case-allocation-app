@@ -1,0 +1,180 @@
+{
+  "screenName": "CasesScreen",
+  "layout": "Vertical",
+  "components": {
+    "header": {
+      "type": "Container",
+      "orientation": "Horizontal",
+      "components": {
+        "title": {
+          "type": "Label",
+          "text": "Cases Management",
+          "fontSize": 24,
+          "fontWeight": "Semibold",
+          "color": "varTextPrimary"
+        }
+      }
+    },
+    "filterBar": {
+      "type": "Container",
+      "orientation": "Horizontal",
+      "components": {
+        "searchBox": {
+          "type": "TextInput",
+          "hintText": "Search cases...",
+          "onChange": "Set(varSearchText, Self.Text)",
+          "width": 200
+        },
+        "statusFilter": {
+          "type": "Dropdown",
+          "items": "[\"All\", \"New\", \"In Progress\", \"Pending\", \"Closed\"]",
+          "defaultSelectedItems": "[\"All\"]",
+          "onChange": "Set(varStatusFilter, Self.Selected.Value)",
+          "width": 120
+        },
+        "priorityFilter": {
+          "type": "Dropdown",
+          "items": "[\"All\", \"Low\", \"Medium\", \"High\", \"Critical\"]",
+          "defaultSelectedItems": "[\"All\"]",
+          "onChange": "Set(varPriorityFilter, Self.Selected.Value)",
+          "width": 120
+        },
+        "assignedToFilter": {
+          "type": "ComboBox",
+          "items": "Users",
+          "displayFields": "[\"Name\"]",
+          "searchFields": "[\"Name\"]",
+          "onChange": "Set(varAssignedToFilter, Self.Selected.UserID)",
+          "width": 150
+        }
+      }
+    },
+    "casesGallery": {
+      "type": "Gallery",
+      "items": "Sort(Filter(Cases, (varSearchText = \"\" || CustomerName in varSearchText || CaseID in varSearchText) && (varStatusFilter = \"All\" || Status = varStatusFilter) && (varPriorityFilter = \"All\" || Priority = varPriorityFilter)), CreatedDate, Descending)",
+      "layout": "Vertical",
+      "templateSize": 120,
+      "template": {
+        "background": {
+          "type": "Rectangle",
+          "fill": "varCardBackground",
+          "borderRadius": 8
+        },
+        "priorityIndicator": {
+          "type": "Rectangle",
+          "width": 4,
+          "height": "Parent.Height",
+          "fill": "Switch(ThisItem.Priority, \"Critical\", RGBA(239, 68, 68, 1), \"High\", RGBA(251, 191, 36, 1), \"Medium\", RGBA(59, 130, 246, 1), RGBA(34, 197, 94, 1))",
+          "x": 0
+        },
+        "caseId": {
+          "type": "Label",
+          "text": "ThisItem.CaseID",
+          "fontWeight": "Semibold",
+          "color": "varTextPrimary",
+          "x": 20,
+          "y": 10
+        },
+        "customerName": {
+          "type": "Label",
+          "text": "ThisItem.CustomerName",
+          "color": "varTextPrimary",
+          "x": "Parent.Width - 200",
+          "y": 10
+        },
+        "caseType": {
+          "type": "Label",
+          "text": "ThisItem.CaseType",
+          "color": "varTextSecondary",
+          "x": 20,
+          "y": 35
+        },
+        "statusBadge": {
+          "type": "Rectangle",
+          "fill": "Switch(ThisItem.Status, \"New\", RGBA(59, 130, 246, 0.2), \"In Progress\", RGBA(251, 191, 36, 0.2), \"Closed\", RGBA(34, 197, 94, 0.2), RGBA(156, 163, 175, 0.2))",
+          "borderRadius": 12,
+          "width": 80,
+          "height": 24,
+          "x": "Parent.Width - 200",
+          "y": 35,
+          "components": {
+            "statusLabel": {
+              "type": "Label",
+              "text": "ThisItem.Status",
+              "color": "Switch(ThisItem.Status, \"New\", RGBA(59, 130, 246, 1), \"In Progress\", RGBA(251, 191, 36, 1), \"Closed\", RGBA(34, 197, 94, 1), RGBA(156, 163, 175, 1))",
+              "fontSize": 12,
+              "align": "Center"
+            }
+          }
+        },
+        "createdDate": {
+          "type": "Label",
+          "text": "Text(ThisItem.CreatedDate, \"mm/dd/yyyy\")",
+          "color": "varTextSecondary",
+          "fontSize": 12,
+          "x": 20,
+          "y": 90
+        },
+        "assignedTo": {
+          "type": "Label",
+          "text": "\"Assigned to: \" & LookUp(Users, UserID = ThisItem.AssignedTo, Name)",
+          "color": "varTextSecondary",
+          "fontSize": 12,
+          "x": "Parent.Width - 200",
+          "y": 90
+        }
+      },
+      "onSelect": "Set(varSelectedCase, ThisItem); Set(varShowCaseDetails, true)"
+    },
+    "caseDetailsForm": {
+      "type": "Form",
+      "dataSource": "Cases",
+      "item": "varSelectedCase",
+      "defaultMode": "Edit",
+      "visible": "varShowCaseDetails",
+      "fields": [
+        {
+          "displayName": "Customer Name",
+          "dataField": "CustomerName",
+          "controlType": "TextInput"
+        },
+        {
+          "displayName": "Case Type",
+          "dataField": "CaseType",
+          "controlType": "Dropdown",
+          "items": "[\"Technical\", \"Billing\", \"General Inquiry\", \"Complaint\"]"
+        },
+        {
+          "displayName": "Priority",
+          "dataField": "Priority",
+          "controlType": "Dropdown",
+          "items": "[\"Low\", \"Medium\", \"High\", \"Critical\"]"
+        },
+        {
+          "displayName": "Status",
+          "dataField": "Status",
+          "controlType": "Dropdown",
+          "items": "[\"New\", \"In Progress\", \"Pending\", \"Closed\"]"
+        },
+        {
+          "displayName": "Assigned To",
+          "dataField": "AssignedTo",
+          "controlType": "ComboBox",
+          "items": "Filter(Users, IsActive = true)",
+          "displayFields": "[\"Name\"]"
+        },
+        {
+          "displayName": "Description",
+          "dataField": "Description",
+          "controlType": "TextInput",
+          "mode": "Multiline"
+        },
+        {
+          "displayName": "Due Date",
+          "dataField": "DueDate",
+          "controlType": "DatePicker"
+        }
+      ]
+    }
+  }
+}

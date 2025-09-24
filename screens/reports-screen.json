@@ -1,0 +1,157 @@
+{
+  "screenName": "ReportsScreen",
+  "layout": "Vertical",
+  "components": {
+    "header": {
+      "type": "Container",
+      "orientation": "Horizontal",
+      "components": {
+        "title": {
+          "type": "Label",
+          "text": "Reports & Analytics",
+          "fontSize": 24,
+          "fontWeight": "Semibold",
+          "color": "varTextPrimary"
+        }
+      }
+    },
+    "filterSection": {
+      "type": "Container",
+      "orientation": "Horizontal",
+      "components": {
+        "dateRangeStart": {
+          "type": "DatePicker",
+          "default": "DateAdd(Today(), -30, Days)",
+          "onChange": "Set(varStartDate, Self.SelectedDate)"
+        },
+        "dateRangeEnd": {
+          "type": "DatePicker",
+          "default": "Today()",
+          "onChange": "Set(varEndDate, Self.SelectedDate)"
+        },
+        "userFilter": {
+          "type": "ComboBox",
+          "items": "Users",
+          "displayFields": "[\"Name\"]",
+          "onChange": "Set(varReportUser, Self.Selected.UserID)"
+        }
+      }
+    },
+    "performanceMetrics": {
+      "type": "Container",
+      "orientation": "Horizontal",
+      "components": {
+        "casesResolved": {
+          "type": "Rectangle",
+          "fill": "varCardBackground",
+          "borderRadius": 8,
+          "width": "(Parent.Width - 60) / 4",
+          "height": 100,
+          "components": {
+            "value": {
+              "type": "Label",
+              "text": "CountRows(Filter(Cases, Status = \"Closed\" && ClosedDate >= varStartDate && ClosedDate <= varEndDate))",
+              "fontSize": 24,
+              "fontWeight": "Semibold",
+              "color": "varSuccessColor"
+            },
+            "label": {
+              "type": "Label",
+              "text": "Cases Resolved",
+              "fontSize": 14,
+              "color": "varTextSecondary"
+            }
+          }
+        },
+        "avgResolutionTime": {
+          "type": "Rectangle",
+          "fill": "varCardBackground",
+          "borderRadius": 8,
+          "width": "(Parent.Width - 60) / 4",
+          "height": 100,
+          "components": {
+            "value": {
+              "type": "Label",
+              "text": "Round(Average(Filter(Cases, Status = \"Closed\" && ClosedDate >= varStartDate && ClosedDate <= varEndDate), DateDiff(CreatedDate, ClosedDate, Days)), 1) & \" days\"",
+              "fontSize": 24,
+              "fontWeight": "Semibold",
+              "color": "varPrimaryColor"
+            },
+            "label": {
+              "type": "Label",
+              "text": "Avg Resolution Time",
+              "fontSize": 14,
+              "color": "varTextSecondary"
+            }
+          }
+        },
+        "slaCompliance": {
+          "type": "Rectangle",
+          "fill": "varCardBackground",
+          "borderRadius": 8,
+          "width": "(Parent.Width - 60) / 4",
+          "height": 100,
+          "components": {
+            "value": {
+              "type": "Label",
+              "text": "Round((CountRows(Filter(Cases, SLAMet = true && ClosedDate >= varStartDate && ClosedDate <= varEndDate)) / CountRows(Filter(Cases, ClosedDate >= varStartDate && ClosedDate <= varEndDate))) * 100, 1) & \"%\"",
+              "fontSize": 24,
+              "fontWeight": "Semibold",
+              "color": "varSuccessColor"
+            },
+            "label": {
+              "type": "Label",
+              "text": "SLA Compliance",
+              "fontSize": 14,
+              "color": "varTextSecondary"
+            }
+          }
+        },
+        "customerSatisfaction": {
+          "type": "Rectangle",
+          "fill": "varCardBackground",
+          "borderRadius": 8,
+          "width": "(Parent.Width - 60) / 4",
+          "height": 100,
+          "components": {
+            "value": {
+              "type": "Label",
+              "text": "\"4.2/5\"",
+              "fontSize": 24,
+              "fontWeight": "Semibold",
+              "color": "varWarningColor"
+            },
+            "label": {
+              "type": "Label",
+              "text": "Customer Satisfaction",
+              "fontSize": 14,
+              "color": "varTextSecondary"
+            }
+          }
+        }
+      }
+    },
+    "chartsSection": {
+      "type": "Container",
+      "orientation": "Horizontal",
+      "components": {
+        "resolutionTrendChart": {
+          "type": "LineChart",
+          "items": "AddColumns(AddColumns(GroupBy(Filter(Cases, Status = \"Closed\" && ClosedDate >= varStartDate && ClosedDate <= varEndDate), \"Month\", \"Cases\"), \"Count\", CountRows(Cases)), \"MonthName\", Text(DateValue(\"1/\" & Month & \"/2024\"), \"mmm\"))",
+          "xAxisName": "MonthName",
+          "yAxisName": "Count",
+          "seriesAxisName": "Count",
+          "width": "Parent.Width / 2 - 20"
+        },
+        "userPerformanceChart": {
+          "type": "ColumnChart",
+          "items": "AddColumns(AddColumns(GroupBy(Filter(Cases, Status = \"Closed\" && ClosedDate >= varStartDate && ClosedDate <= varEndDate), \"AssignedTo\", \"UserCases\"), \"ResolvedCount\", CountRows(UserCases)), \"UserName\", LookUp(Users, UserID = AssignedTo, Name))",
+          "xAxisName": "UserName",
+          "yAxisName": "ResolvedCount",
+          "seriesAxisName": "ResolvedCount",
+          "width": "Parent.Width / 2 - 20"
+        }
+      }
+    }
+  }
+}

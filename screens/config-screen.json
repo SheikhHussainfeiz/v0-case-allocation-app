@@ -1,0 +1,170 @@
+{
+  "screenName": "ConfigScreen",
+  "layout": "Vertical",
+  "components": {
+    "header": {
+      "type": "Container",
+      "orientation": "Horizontal",
+      "components": {
+        "title": {
+          "type": "Label",
+          "text": "System Configuration",
+          "fontSize": 24,
+          "fontWeight": "Semibold",
+          "color": "varTextPrimary"
+        }
+      }
+    },
+    "autoAssignmentSection": {
+      "type": "Rectangle",
+      "fill": "varCardBackground",
+      "borderRadius": 8,
+      "height": 200,
+      "components": {
+        "sectionTitle": {
+          "type": "Label",
+          "text": "Auto-Assignment Rules",
+          "fontSize": 18,
+          "fontWeight": "Semibold",
+          "color": "varTextPrimary",
+          "x": 20,
+          "y": 20
+        },
+        "enableAutoAssignment": {
+          "type": "Toggle",
+          "default": "Value(LookUp(SystemConfig, ConfigKey = \"EnableAutoAssignment\", ConfigValue))",
+          "x": 20,
+          "y": 60,
+          "onChange": "Patch(SystemConfig, LookUp(SystemConfig, ConfigKey = \"EnableAutoAssignment\"), {ConfigValue: Text(Self.Value)})",
+          "components": {
+            "label": {
+              "type": "Label",
+              "text": "Enable Auto Assignment",
+              "color": "varTextPrimary",
+              "x": 60,
+              "y": 0
+            }
+          }
+        },
+        "roundRobinAssignment": {
+          "type": "Toggle",
+          "default": "Value(LookUp(SystemConfig, ConfigKey = \"RoundRobinAssignment\", ConfigValue))",
+          "x": 20,
+          "y": 100,
+          "onChange": "Patch(SystemConfig, LookUp(SystemConfig, ConfigKey = \"RoundRobinAssignment\"), {ConfigValue: Text(Self.Value)})",
+          "components": {
+            "label": {
+              "type": "Label",
+              "text": "Round Robin Assignment",
+              "color": "varTextPrimary",
+              "x": 60,
+              "y": 0
+            }
+          }
+        },
+        "workloadBasedAssignment": {
+          "type": "Toggle",
+          "default": "Value(LookUp(SystemConfig, ConfigKey = \"WorkloadBasedAssignment\", ConfigValue))",
+          "x": 20,
+          "y": 140,
+          "onChange": "Patch(SystemConfig, LookUp(SystemConfig, ConfigKey = \"WorkloadBasedAssignment\"), {ConfigValue: Text(Self.Value)})",
+          "components": {
+            "label": {
+              "type": "Label",
+              "text": "Workload Based Assignment",
+              "color": "varTextPrimary",
+              "x": 60,
+              "y": 0
+            }
+          }
+        }
+      }
+    },
+    "slaSection": {
+      "type": "Rectangle",
+      "fill": "varCardBackground",
+      "borderRadius": 8,
+      "height": 240,
+      "y": 220,
+      "components": {
+        "sectionTitle": {
+          "type": "Label",
+          "text": "SLA Settings (Hours)",
+          "fontSize": 18,
+          "fontWeight": "Semibold",
+          "color": "varTextPrimary",
+          "x": 20,
+          "y": 20
+        },
+        "criticalSLA": {
+          "type": "TextInput",
+          "default": "LookUp(SystemConfig, ConfigKey = \"CriticalSLA\", ConfigValue)",
+          "x": 20,
+          "y": 60,
+          "width": 100,
+          "onChange": "Patch(SystemConfig, LookUp(SystemConfig, ConfigKey = \"CriticalSLA\"), {ConfigValue: Self.Text})",
+          "components": {
+            "label": {
+              "type": "Label",
+              "text": "Critical Cases SLA",
+              "color": "varTextPrimary",
+              "x": 120,
+              "y": 0
+            }
+          }
+        },
+        "highSLA": {
+          "type": "TextInput",
+          "default": "LookUp(SystemConfig, ConfigKey = \"HighSLA\", ConfigValue)",
+          "x": 20,
+          "y": 100,
+          "width": 100,
+          "onChange": "Patch(SystemConfig, LookUp(SystemConfig, ConfigKey = \"HighSLA\"), {ConfigValue: Self.Text})",
+          "components": {
+            "label": {
+              "type": "Label",
+              "text": "High Priority SLA",
+              "color": "varTextPrimary",
+              "x": 120,
+              "y": 0
+            }
+          }
+        },
+        "mediumSLA": {
+          "type": "TextInput",
+          "default": "LookUp(SystemConfig, ConfigKey = \"MediumSLA\", ConfigValue)",
+          "x": 20,
+          "y": 140,
+          "width": 100,
+          "onChange": "Patch(SystemConfig, LookUp(SystemConfig, ConfigKey = \"MediumSLA\"), {ConfigValue: Self.Text})",
+          "components": {
+            "label": {
+              "type": "Label",
+              "text": "Medium Priority SLA",
+              "color": "varTextPrimary",
+              "x": 120,
+              "y": 0
+            }
+          }
+        },
+        "lowSLA": {
+          "type": "TextInput",
+          "default": "LookUp(SystemConfig, ConfigKey = \"LowSLA\", ConfigValue)",
+          "x": 20,
+          "y": 180,
+          "width": 100,
+          "onChange": "Patch(SystemConfig, LookUp(SystemConfig, ConfigKey = \"LowSLA\"), {ConfigValue: Self.Text})",
+          "components": {
+            "label": {
+              "type": "Label",
+              "text": "Low Priority SLA",
+              "color": "varTextPrimary",
+              "x": 120,
+              "y": 0
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "dataSources": {
+    "Cases": {
+      "type": "Dataverse",
+      "table": "Cases",
+      "fields": [
+        "CaseID",
+        "CustomerName",
+        "CaseType",
+        "Priority",
+        "Status",
+        "AssignedTo",
+        "CreatedDate",
+        "DueDate",
+        "ClosedDate",
+        "Description",
+        "SLAMet"
+      ]
+    },
+    "Users": {
+      "type": "Dataverse",
+      "table": "Users",
+      "fields": ["UserID", "Name", "Email", "Role", "IsActive", "MaxDailyLoad", "IsTeamLead"]
+    },
+    "DailyLoads": {
+      "type": "Dataverse",
+      "table": "DailyLoads",
+      "fields": ["LoadID", "CustomerName", "RecordCount", "Status", "ProcessedDate", "ProcessedBy"]
+    },
+    "CaseNotes": {
+      "type": "Dataverse",
+      "table": "CaseNotes",
+      "fields": ["NoteID", "CaseID", "UserID", "Note", "CreatedDate"]
+    },
+    "SystemConfig": {
+      "type": "Dataverse",
+      "table": "SystemConfig",
+      "fields": ["ConfigKey", "ConfigValue", "Category", "Description"]
+    }
+  }
+}
